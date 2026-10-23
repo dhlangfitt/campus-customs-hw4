@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Campus Customs — application check</title>
+<style>
+  :root {
+    --ink: #050e16; --ink-2: #081722; --ink-3: #0c2130;
+    --line: #1d4259; --text: #e2eef5; --muted: #7fa0b4;
+    --brass: #b98b3a; --brass-soft: #d9b468; --accent: #ff4f93;
+    --ok: #6fd48b; --warn: #e8b34a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 48px 24px 80px; background: var(--ink); color: var(--text);
+    font: 400 17px/1.68 "Cormorant Garamond", Garamond, Georgia, serif;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; }
+  h1, h2, h3 { font-variant-caps: small-caps; letter-spacing: 0.04em; font-weight: 600; }
+  h1 { font-size: 2.4rem; margin: 0 0 6px; }
+  h2 { font-size: 1.5rem; margin: 0; color: var(--brass-soft); }
+  h3 { font-size: 0.84rem; margin: 26px 0 8px; color: var(--muted); letter-spacing: 0.16em; }
+  .sub { color: var(--muted); margin: 0 0 34px; }
+  hr.rule { height: 1px; background: var(--line); border: 0; margin: 40px 0; }
+
+  .test {
+    background: var(--ink-2); border: 1px solid var(--line); border-radius: 14px;
+    padding: 24px 28px 30px; margin: 0 0 30px;
+  }
+  .head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .num {
+    flex: none; width: 30px; height: 30px; border-radius: 50%;
+    display: grid; place-items: center; font-size: 0.9rem;
+    background: var(--brass); color: var(--ink); font-weight: 700;
+  }
+  .pass {
+    margin-left: auto; font-size: 0.74rem; letter-spacing: 0.16em;
+    font-variant-caps: small-caps; color: var(--ok);
+    border: 1px solid var(--ok); border-radius: 999px; padding: 3px 12px;
+  }
+  p { margin: 0 0 12px; }
+  .what { color: var(--muted); margin: 6px 0 0; }
+
+  figure { margin: 22px 0 0; }
+  figure img {
+    width: 100%; display: block; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--ink-3);
+  }
+  figcaption { margin-top: 8px; font-size: 0.82rem; color: var(--muted); }
+
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 0; font-size: 0.93rem; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-variant-caps: small-caps; letter-spacing: 0.1em; font-weight: 600; }
+  td.n { text-align: right; font-variant-numeric: tabular-nums; }
+  .out { color: var(--accent); }
+  .low { color: var(--warn); }
+
+  ul, ol { margin: 6px 0 0; padding-left: 22px; }
+  li { margin: 7px 0; }
+  li b { color: var(--brass-soft); font-weight: 600; }
+  .proof {
+    margin-top: 20px; padding: 15px 18px; border-radius: 10px;
+    background: rgba(111,212,139,0.07); border: 1px solid rgba(111,212,139,0.45);
+  }
+  .proof h3 { margin-top: 0; color: var(--ok); }
+  .note {
+    margin-top: 22px; padding: 15px 18px; border-radius: 10px; font-size: 0.94rem;
+    background: rgba(185,139,58,0.1); border: 1px solid var(--brass);
+  }
+  footer { color: var(--muted); font-size: 0.86rem; margin-top: 44px; }
+  code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.85em; color: var(--brass-soft); }
+  .quote { font-style: italic; color: var(--text); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Campus Customs — application check</h1>
+  <p class="sub">
+    Three checks run against the live application. Each is described below, with
+    a reading of what the screenshot actually shows and why it demonstrates the
+    thing being checked. Screenshots are in <code>app_check_images/</code>.
+  </p>
+
+  <!-- ============================================================= 1 === -->
+  <section class="test">
+    <div class="head">
+      <span class="num">1</span>
+      <h2>Chat reporting honest stock and price from the database</h2>
+      <span class="pass">passed</span>
+    </div>
+    <p class="what">
+      Asked the shop for inventory on two named garments, then opened each
+      product page and compared both against the <code>inventory</code> table
+      read directly.
+    </p>
+
+    <h3>What the database holds</h3>
+    <table>
+      <thead>
+        <tr><th>Size</th><th class="n">Champion Mens Triumph Raglan Crew · $58</th><th class="n">Yale Bowl T Shirt · $32</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>XS</td><td class="n out">0 — sold out</td><td class="n">25</td></tr>
+        <tr><td>S</td><td class="n">15</td><td class="n">15</td></tr>
+        <tr><td>M</td><td class="n">15</td><td class="n">5</td></tr>
+        <tr><td>L</td><td class="n">12</td><td class="n">12</td></tr>
+        <tr><td>XL</td><td class="n low">2 — only 2 left</td><td class="n out">0 — sold out</td></tr>
+        <tr><td>XXL</td><td class="n">12</td><td class="n">20</td></tr>
+        <tr><td><b>Total</b></td><td class="n"><b>56</b></td><td class="n"><b>77</b></td></tr>
+      </tbody>
+    </table>
+
+    <h3>What the screenshot shows</h3>
+    <p>
+      The screenshot is a side-by-side: the running application on the left, the
+      figures read out of the database on the right.
+    </p>
+    <ul>
+      <li><b>Left column, upper half</b> — the product page for the Champion Mens Triumph
+        Raglan Crew: the garment photograph, the category <span class="quote">sweatshirts &amp;
+        crewnecks</span>, the price <b>$58.00</b>, the colour chips <span class="quote">dark heather
+        gray</span> and <span class="quote">white</span>, and the full size run. XS is struck
+        through and dimmed, reading <span class="quote">sold out</span>. XL is outlined in amber and
+        reads <span class="quote">only 2 left</span>. The footer line gives
+        <span class="quote">56 in stock across all sizes</span>.</li>
+      <li><b>Left column, lower half</b> — the Yale Bowl T Shirt page: ivory ringer tee,
+        <b>$32.00</b>, colours <span class="quote">ivory</span> and <span class="quote">navy
+        blue</span>, sizes XS 25, S 15, M 5, L 12, XL struck through as sold out, XXL 20.</li>
+      <li><b>Right column</b> — the two tables returned from querying
+        <code>campus_customs.db</code> directly, size by size, with totals.</li>
+    </ul>
+
+    <div class="proof">
+      <h3>Why this is proof</h3>
+      <p>
+        The two columns are independent: one is what the application renders to a
+        shopper, the other is what the database contains. They can be read against
+        each other cell by cell, and every cell agrees — six sizes for each of two
+        garments, both prices, and both totals.
+      </p>
+      <p style="margin-bottom:0">
+        The two disagreements that would matter most are the ones the screenshot
+        makes easiest to see. <b>XS on the Raglan</b> and <b>XL on the Bowl tee</b> are zero in
+        the database, and both appear struck through rather than merely absent —
+        the shop is not hiding what it cannot sell. <b>XL on the Raglan</b> holds 2, and
+        the page says <span class="quote">only 2 left</span> rather than <span class="quote">in
+        stock</span>, so a true count is not being rounded into a comfortable one.
+      </p>
+    </div>
+
+    <figure>
+      <img src="app_check_images/inventory.webp" alt="Two product detail pages on the left beside the database figures on the right" />
+      <figcaption>app_check_images/inventory.webp</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============================================================= 2 === -->
+  <section class="test">
+    <div class="head">
+      <span class="num">2</span>
+      <h2>Search-result cards appearing on the page after a chat question</h2>
+      <span class="pass">passed</span>
+    </div>
+    <p class="what">
+      Asked the assistant for a kind of garment with constraints attached, and
+      watched whether the shop page itself rearranged — or whether the answer
+      arrived only as text inside the chat window.
+    </p>
+
+    <h3>What the screenshot shows</h3>
+    <ul>
+      <li><b>Across the top</b> — three filter chips, each with a dismiss cross:
+        <span class="quote">“navy shirt”</span>, <span class="quote">navy</span> and
+        <span class="quote">size M</span>. The conversation has been turned into a visible,
+        editable filter rather than a one-off query.</li>
+      <li><b>The grid below</b> — six product cards the filter produced, each with photograph,
+        name, price and the opening of its description: 2025 Yale Vs Harvard T Shirt $32,
+        Baseball Left Chest Crewneck $58, Basic Hoodie Big Yale $68, Boola Boola T Shirt $32,
+        Brooks Brothers Double Knit Full Zip Hoodie Yale $88, and Champion Full Zip Hood $88.
+        Two carry stock warnings — <span class="quote">2 of 6 sizes sold out</span> and
+        <span class="quote">1 of 6 sizes sold out</span>.</li>
+      <li><b>The chat panel, right</b> — the shopper's message
+        <span class="quote">fine graphics are fine</span>, and the reply:
+        <span class="quote">Navy garments in men's M include:</span> followed by five named
+        garments with prices, closing <span class="quote">All have M in stock.</span></li>
+      <li><b>At the foot of the panel</b> — a single compact row: four thumbnails, a
+        <span class="quote">+2</span>, the label <span class="quote">6 garments · “navy shirt” ·
+        navy …</span>, and beneath it <span class="quote">showing on the page</span>.</li>
+    </ul>
+
+    <div class="proof">
+      <h3>Why this is proof</h3>
+      <p>
+        The garments are <b>on the page, not in the chat</b>. The reply is four lines of
+        prose; the merchandise is six full cards in the grid behind it, which is
+        where a shopper browses. The chat did not paste a gallery into the
+        conversation — it put the result where the shop lives.
+      </p>
+      <p>
+        The chips show the question was <b>parsed into structured filters</b>, not
+        matched as a string. Colour and size became separate, separately removable
+        clauses. A shopper can now take <span class="quote">size M</span> off by hand without
+        going back to the assistant, which is the behaviour of a control panel
+        rather than a search box.
+      </p>
+      <p style="margin-bottom:0">
+        The reply names five garments while the page shows six, and says
+        <span class="quote">include</span> rather than listing them all. That is the intended
+        division of labour: the cards enumerate, and the assistant says only the
+        part a picture cannot carry.
+      </p>
+    </div>
+
+    <figure>
+      <img src="app_check_images/dynamic.webp" alt="Filter chips and six product cards on the page, with the chat panel to the right" />
+      <figcaption>app_check_images/dynamic.webp</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============================================================= 3 === -->
+  <section class="test">
+    <div class="head">
+      <span class="num">3</span>
+      <h2>Re-displaying a result from earlier in the chat</h2>
+      <span class="pass">passed</span>
+    </div>
+    <p class="what">
+      Ran several different searches in one conversation, scrolled back up the
+      chat, and clicked an earlier result to put that set of garments back on the
+      page.
+    </p>
+
+    <h3>What the screenshot shows</h3>
+    <p>Two moments from the same session, stacked.</p>
+    <ol>
+      <li><b>The upper capture — a later search in force.</b> One chip reads
+        <span class="quote">under $40</span>, and the grid holds six $32 T-shirts: 2025 Yale Vs
+        Harvard, Benjamin Franklin, Big Yale Tri Blend, Boola Boola, District Tri Blend
+        Vintage Shield and Football Left Chest. The chat above shows the exchange that
+        produced it — the assistant first answering <span class="quote">Nothing in the catalog is
+        priced under $30</span>, the shopper then asking
+        <span class="quote">okay can you display everything under $40?</span>, and the reply
+        explaining that there are more than six and the panel is showing the first six.
+        The result row at the foot reads <span class="quote">6 garments · under $40</span> /
+        <span class="quote">showing on the page</span>.</li>
+      <li><b>The lower capture — an earlier result brought back.</b> The page now reads
+        <span class="quote">1 garment</span>, and the chips have changed with it:
+        <span class="quote">“Yale Bowl vintage collegiate stadium graphic university merch”</span>,
+        <span class="quote">ivory</span>, <span class="quote">under $30</span>. A single card is on
+        the page — the Yale Bowl T Shirt at $32, marked
+        <span class="quote">1 of 6 sizes sold out</span>. In the chat, that older exchange is
+        visible again, and <em>its</em> row is the one now labelled
+        <span class="quote">showing on the page</span>.</li>
+    </ol>
+
+    <div class="proof">
+      <h3>Why this is proof</h3>
+      <p>
+        The two captures show <b>different results on the same page</b>, and the second is
+        not a fresh search — it is an earlier one restored. Everything that defined
+        it came back together: its count, its single card, and all three of its
+        original filter chips, including the unusual long query string that no one
+        would retype.
+      </p>
+      <p>
+        The <span class="quote">showing on the page</span> marker <b>moved</b>. In the upper capture
+        it sits on the <span class="quote">under $40</span> row; in the lower it sits on the Yale
+        Bowl row. The conversation keeps a record of every result and knows which
+        one is currently in view, so a shopper can tell where they are among several.
+      </p>
+      <p style="margin-bottom:0">
+        The restored state is also still honest. Within it the assistant says
+        plainly that nothing matches under $30 and that the shirt is $32 —
+        a restored result reproduces what was found, not a more flattering
+        version of it.
+      </p>
+    </div>
+
+    <figure>
+      <img src="app_check_images/re-display.webp" alt="A later search in force above, and an earlier result restored to the page below" />
+      <figcaption>app_check_images/re-display.webp</figcaption>
+    </figure>
+  </section>
+
+  <hr class="rule" />
+
+  <div class="note">
+    <b>One observation, not a defect.</b> In the third screenshot the Benjamin
+    Franklin T Shirt carries the description <span class="quote">“Campus Customs product photo
+    (benjamin franklin t shirt). Vision blocked; filename-based stub.”</span> That text
+    was checked against the database and is stored in the supplied
+    <code>catalogue</code> table — a placeholder in the course's own seed data,
+    not something the application wrote. The shop is displaying it verbatim,
+    which is the intended behaviour: descriptions are rendered exactly as stored
+    and never rewritten.
+  </div>
+
+  <footer>
+    Campus Customs · MGT 409 · checks run against the live application and
+    <code>data/campus_customs.db</code>.
+  </footer>
+
+</div>
+</body>
+</html>

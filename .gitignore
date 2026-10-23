@@ -1,0 +1,36 @@
+# ---------------------------------------------------------------- secrets --
+# The real key never belongs in the repository. .env.example carries the
+# variable names only.
+.env
+.env.*
+!.env.example
+backend/.env
+
+# ------------------------------------------------------------- course data --
+# The data pack is supplied with the assignment, not redistributed here:
+# the SQLite database and the 102 product photographs stay out of the repo.
+data/
+data-*.zip
+
+# ------------------------------------------------------------------ python --
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# -------------------------------------------------------------- node / vite --
+node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# ---------------------------------------------------------------- rotated --
+# Archived audit trails. output/audit_trail.json itself IS committed.
+output/audit_trail.part.*.json
+output/audit_trail.corrupt.*.json
+
+# ------------------------------------------------------------------- local --
+.DS_Store
+.claude/
+*.tmp
+.json.tmp
