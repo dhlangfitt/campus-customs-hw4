@@ -32,6 +32,7 @@ Secrets are never recorded in this log, even if shared accidentally.
 | 9 | Usability Improvements | Complete |
 | 10 | Style the Website | Complete |
 | 12 | Audit Trail, Safety, Finish Harness | Complete |
+| 13 | Push to GitHub and Submit the URL | Complete |
 
 *The total number of Problems is not yet known; this table grows as the user
 announces each one.*
@@ -1500,4 +1501,87 @@ stop reasons.
 > `audit_trail.json` therefore ships non-empty, holding both ordinary answered
 > turns and the four deliberately induced failures. Recorded in the harness so
 > a reader does not mistake the induced failures for incidents in service.
+
+---
+
+**END OF PROBLEM 12**
+
+---
+
+# PROBLEM 13 — Push to GitHub and Submit the URL
+
+**Status: Complete**
+
+---
+
+## 13.1 — Folder structure, public repository, and verification
+
+### User — 2026-10-23
+
+> Call this last problem problem 13 "Push to GitHub and submit the URL": can you double-check that everything is formatted in the following folder structure?
+>
+> [the specified layout: AI_prompts.md, requirements.txt, .env.example, .gitignore, README.md, frontend/, backend/{main.py, agent.py, models.py, tools.py, prompts/prompt.md}, output/{harness.md, design.md, usability.md, app_check.html, app_check_images/, audit_trail.json}]
+>
+> And then I need you to push the entirey hw4 to a public GitHub repository using my Github key etc. And I'll need you to give me the repo URL and check that it's a link that graders can open and clone. Double check that my real .env, campus_customs.db or product images aren't in the GitHub repo (use gitignore and include .env.example as placeholders). Make sure the README.md explains how the front end and back end work after placing the data pack.
+
+### The repository
+
+**https://github.com/dhlangfitt/campus-customs-hw4** — public, default branch
+`main`, one commit, 50 files, 976 KB.
+
+### Assistant — summary
+
+**Structure corrected against the specification.** Three discrepancies were
+found and fixed: `requirements.txt` and `.env.example` sat inside `backend/`
+and were moved to the project root where the specification places them, and
+`README.md` did not exist. The error message in `agent.py` and the header of
+`.env.example` were updated to name the new paths, and the backend was
+restarted and re-tested afterwards to confirm the move broke nothing —
+`find_dotenv` already walks up from `backend/`, so a root `.env` is found
+without code changes.
+
+**`.gitignore` rewritten** around what must never leave the machine: `.env` and
+any variant (with `!.env.example` kept), the entire `data/` directory and
+`data-*.zip`, virtual environments, `node_modules`, build output, rotated audit
+archives, and local editor configuration. `output/audit_trail.json` itself is
+explicitly committed.
+
+**`README.md` written** to take a grader from a fresh clone to a running
+application: placing the course data pack first and what breaks without it,
+copying `.env.example` to `.env` and filling in the key, installing and running
+the backend from `backend/`, installing and running the frontend from
+`frontend/`, a diagram of how the two halves meet, the full layout, and notes
+on what is stubbed. Every path the README names was checked to exist.
+
+**Verified before publishing, not after.** The repository was staged and
+inspected before any push: no `.env`, no `campus_customs.db`, no product
+images, no `data-2.zip`, no virtual environment and no `node_modules`. File
+contents were then scanned for credential-shaped strings; the only matches were
+npm integrity hashes in `package-lock.json`, which are ordinary. No tracked file
+contains a non-empty `PORTKEY_API_KEY` or `OPENAI_API_KEY` assignment.
+
+**Verified again after publishing, as a grader would.** The repository page
+returns HTTP 200 unauthenticated. The repository was then cloned with git
+credentials, global config and system config all disabled, which succeeded —
+confirming it is genuinely public rather than merely readable by the owner.
+Within that clone: only `.env.example` is tracked (its `PORTKEY_API_KEY` is
+empty), no database, no product images, and the full history — not merely the
+tip — contains nothing sensitive.
+
+**The README was then followed in the clone** to prove the instructions work:
+the data pack was placed, `.env` created from the example, and the backend
+started from `backend/`. It reported healthy, returned 102 garments and 77
+available in XL, served a product image, and answered a chat question with six
+product cards. The test clone was deleted afterwards because a real key had
+been written into it.
+
+### One judgement call
+
+An earlier automated check reported `.env` as leaked. It had not: the pattern
+was matching `.env.example` as a substring. Rather than accept the alarming
+result or wave it away, the test was re-run with an exact path match, which
+confirmed only `.env.example` is tracked. Worth recording because the first
+answer looked like a serious finding and the second looked like a
+rationalisation — the resolution was to make the test precise, not to pick the
+preferred answer.
 
